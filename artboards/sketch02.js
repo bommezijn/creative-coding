@@ -38,6 +38,7 @@ const sketch = ({ context, width, height }) => {
 
     agents.forEach(agent => {
       agent.update(); // after adding this it doesn't animate this is because we are only drawing 1 frame. this will be specified in settings
+      agent.bounce(width, height);
       agent.draw(context);
     })
 
@@ -68,6 +69,11 @@ class Agent {
   update() {
     this.pos.x += this.vel.x;
     this.pos.y += this.vel.y;
+  }
+
+  bounce(width, height) {
+    if (this.pos.x <= 0 || this.pos.x >= width) this.vel.x *= -1;
+    if (this.pos.y <= 0 || this.pos.y >= height) this.vel.y *= -1;
   }
 
   // reference to canvas context to target where to draw
