@@ -9,7 +9,7 @@ const settings = {
 
 const sketch = () => {
   return ({ context, width, height }) => {
-    context.fillStyle = 'white';
+    context.fillStyle = '#007bff';
     context.fillRect(0, 0, width, height);
 
     const cx = width * 0.5;
@@ -19,7 +19,7 @@ const sketch = () => {
     const h = height * 0.1;
     let x,y;
 
-    const num = 69; //number of squares
+    const num = 24; //number of squares
     const radius = width * 0.3; //size of radius
 
 
@@ -34,7 +34,7 @@ const sketch = () => {
       context.save();
       context.translate(x,y);
       context.rotate(-angle);
-      context.scale(random.range(0.1, 3), random.range(0.2, 0.5));
+      context.scale(random.range(0.1, 6), random.range(0.1, 0.5));
 
       context.fillStyle = 'black';
       context.beginPath();
@@ -44,9 +44,10 @@ const sketch = () => {
 
       context.save();
       context.translate(cx,cy);
+      // context.translate(random.range(0, 512),random.range(0, 512));
       context.rotate(-angle);
 
-      context.lineWidth = random.range(5, 15);
+      context.lineWidth = random.range(1, 16);
       context.strokeStyle = 'black';
 
       context.beginPath();
