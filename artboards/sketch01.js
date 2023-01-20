@@ -1,4 +1,5 @@
 const canvasSketch = require('canvas-sketch');
+const util = require('canvas-sketch-util');
 // Transforming context itself
 
 const settings = {
