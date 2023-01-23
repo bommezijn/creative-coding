@@ -1,5 +1,6 @@
 const canvasSketch = require('canvas-sketch');
 const random = require('canvas-sketch-util/random');
+const math = require('canvas-sketch-util/math');
 
 const settings = {
   dimensions: [ 512, 512 ],
@@ -18,7 +19,7 @@ const sketch = ({ context, width, height }) => {
 
   const agents = [];
 
-  for (let index = 0; index < 100; index++) {
+  for (let index = 0; index < 20; index++) {
     const x = random.range(0, width);
     const y = random.range(0, height);
     agents.push(new Agent(x, y));
@@ -29,16 +30,35 @@ const sketch = ({ context, width, height }) => {
     context.fillStyle = 'white';
     context.fillRect(0, 0, width, height);
 
-    const agentA = new Agent(256, 256);
-    const agentB = new Agent(128, 128);
+    // const agentA = new Agent(256, 256);
+    // const agentB = new Agent(128, 128);
 
     // context.arc(pointB.x, pointB.y, pointB.radius, 0, Math.PI * 2);
     // context.fillStyle = 'black';
     // context.fill();
 
+    for(let i = 0; i < agents.length; i++) {
+      const agent = agents[i];
+      for(let j = i + 1; j < agents.length; j++) {
+        const other = agents[j];
+        const distance  = agent.pos.getDistance(other.pos);
+
+        if (distance > 128) continue;
+
+        context.lineWidth = math.mapRange(distance, 0, 128, 4, 0.1);
+
+        context.beginPath()
+        context.moveTo(agent.pos.x, agent.pos.y)
+        context.lineTo(other.pos.x, other.pos.y)
+        context.stroke()
+
+      }
+    }
+
     agents.forEach(agent => {
       agent.update(); // after adding this it doesn't animate this is because we are only drawing 1 frame. this will be specified in settings
       agent.bounce(width, height);
+      agent.wrap(width, height);
       agent.draw(context);
     })
 
@@ -55,6 +75,12 @@ class Vector {
     this.x = x;
     this.y = y;
     this.radius = radius;
+  }
+
+  getDistance(vector) {
+    const dx = this.x - vector.x;
+    const dy = this.y - vector.y;
+    return Math.sqrt(dx * dx + dy * dy);
   }
 }
 
@@ -74,6 +100,13 @@ class Agent {
   bounce(width, height) {
     if (this.pos.x <= 0 || this.pos.x >= width) this.vel.x *= -1;
     if (this.pos.y <= 0 || this.pos.y >= height) this.vel.y *= -1;
+  }
+
+  wrap(width, height) {
+    if (this.pos.x <= 0) this.pos.x = width;
+    if (this.pos.x >= width) this.pos.x = 0;
+    if (this.pos.y <= 0) this.pos.y = height;
+    if (this.pos.y >= height) this.pos.y = 0;
   }
 
   // reference to canvas context to target where to draw
