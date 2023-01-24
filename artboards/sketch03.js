@@ -23,8 +23,8 @@ const sketch = () => {
     context.fillStyle = 'white';
     context.fillRect(0, 0, width, height);
 
-    const cols = 5;
-    const rows = 5;
+    const cols = 50;
+    const rows = 50;
     const cells = cols * rows;
 
     const gridw = width * 0.8;
@@ -45,7 +45,7 @@ const sketch = () => {
       const x = col * cellw + margx + (cellw * 0.5);
       const y = row * cellh + margy + (cellh * 0.5);
 
-      const n = random.noise2D(x + frame * 10, y, 0.001);
+      const n = random.noise2D(x + frame * 24, y, 0.006);
       const angle = n * Math.PI * 0.2;
       // const scale = (n + 1) / 2 * 30;
       // const scale = (n * 0.5 + 0.5 ) * 30;
@@ -63,6 +63,7 @@ const sketch = () => {
 
       context.moveTo(w * -0.5, 0);
       context.lineTo(w * 0.5, 0);
+      context.strokeStyle = '#ffcc00';
       context.stroke();
 
       context.restore()
