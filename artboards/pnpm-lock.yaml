@@ -4,11 +4,13 @@ specifiers:
   '@ffmpeg-installer/ffmpeg': ^1.1.0
   canvas-sketch: ^0.7.6
   canvas-sketch-util: ^1.10.0
+  tweakpane: ^3.1.2
 
 dependencies:
   '@ffmpeg-installer/ffmpeg': 1.1.0
   canvas-sketch: 0.7.6
   canvas-sketch-util: 1.10.0
+  tweakpane: 3.1.2
 
 packages:
 
@@ -405,6 +407,10 @@ packages:
       adaptive-bezier-curve: 1.0.3
       normalize-svg-path: 0.1.0
       vec2-copy: 1.0.0
+    dev: false
+
+  /tweakpane/3.1.2:
+    resolution: {integrity: sha512-bgPu0IKCqShX0tDpviD+hBHNhlSOExw9WvSpqK+fAT8Sh5eOpBhl18gMitvTXLmeZRMYr2HwgC+UR4URqL39bw==}
     dev: false
 
   /vec2-copy/1.0.0:
