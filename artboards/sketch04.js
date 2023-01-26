@@ -45,8 +45,8 @@ const sketch = () => {
 
     context.beginPath()
     
-    context.rect(mx, my, mw, mh);
-    context.stroke()
+    // context.rect(mx, my, mw, mh);
+    // context.stroke()
 
     // context.fillText(text, 0,0);
     context.strokeText(text, 0,0);
