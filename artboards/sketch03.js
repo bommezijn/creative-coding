@@ -99,8 +99,8 @@ const creatPane = () => {
   });
   folder.addInput(parameters, 'lineCap', {options: {butt: 'butt', round: 'round', square: 'square'}})
   folder.addInput(parameters, 'animate');
-  folder.addInput(parameters, 'cols', { min: 2, max: 50, step: 1 });
-  folder.addInput(parameters, 'rows', { min: 2, max: 50, step: 1 });
+  folder.addInput(parameters, 'cols', { min: 2, max: 100, step: 1 });
+  folder.addInput(parameters, 'rows', { min: 2, max: 100, step: 1 });
   folder.addInput(parameters, 'scaleMin', { min: 1, max: 100 });
   folder.addInput(parameters, 'scaleMax', { min: 1, max: 100 });
   folder.addInput(parameters, 'strokeColor');
