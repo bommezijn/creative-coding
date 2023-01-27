@@ -16,43 +16,84 @@ const settings = {
   // animate: true,
 };
 
-let text = "NB";
+let text = "N";
 let fontSize = 360;
 let fontFamily = "arial";
 
-const sketch = () => {
+const typeCanvas = document.createElement('canvas');
+const typeContext = typeCanvas.getContext('2d');
+
+
+const sketch = ({ context, width, height }) => {
+
+  const cell = 16;
+  const cols = Math.floor(width / cell);
+  const rows = Math.floor(height / cell);
+  const numCells = cols * rows;
+
+  typeCanvas.width = cols;
+  typeCanvas.height = rows;
+
   return ({ context, width, height }) => {
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, width, height);
+    typeContext.fillStyle = 'black';
+    typeContext.fillRect(0, 0, cols, rows);
 
+    fontSize = cols;
     
-    context.fillStyle = 'black';
-    context.textBaseline = 'top';
-    // context.textAlign = 'center';
-    context.font = `${fontSize}px ${fontFamily}`;
+    typeContext.fillStyle = 'white';
+    typeContext.textBaseline = 'top';
+
+    typeContext.font = `${fontSize}px ${fontFamily}`;
     
 
-    const metrics = context.measureText(text);
-    // console.log(metrics)
+    const metrics = typeContext.measureText(text);
+
     const mx = metrics.actualBoundingBoxLeft * -1;
     const my = metrics.actualBoundingBoxAscent * -1;
     const mw = metrics.actualBoundingBoxLeft +  metrics.actualBoundingBoxRight;
     const mh = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
 
-    const x = (width - mw) * 0.5 - mx;
-    const y = (height - mh) * 0.5 - my;
+    const tx = (cols - mw) * 0.5 - mx;
+    const ty = (rows - mh) * 0.5 - my;
 
-    context.save();
-    context.translate(x, y);
+    typeContext.save();
+    typeContext.translate(tx, ty);
 
-    context.beginPath()
+    typeContext.beginPath()
     
-    // context.rect(mx, my, mw, mh);
-    // context.stroke()
+    // typeContext.strokeText(text, 0,0);
+    typeContext.fillText(text, 0,0);
+    typeContext.restore();
 
-    // context.fillText(text, 0,0);
-    context.strokeText(text, 0,0);
-    context.restore();
+    const typeData = typeContext.getImageData(0, 0, cols, rows).data;
+    // const typeDataT = typeContext.getImageData(0, 0, cols, rows);
+    // console.log(typeDataT)
+    context.drawImage(typeCanvas, 0, 0);
+
+    for (let index = 0; index < numCells; index++) {
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+      const x = col * cell;
+      const y = row * cell;
+
+      const r = typeData[(index * 4) + 0];
+      const g = typeData[(index * 4) + 1];
+      const b = typeData[(index * 4) + 2];
+      const a = typeData[(index * 4) + 3];
+
+      // context.fillStyle = `rgb(${r}, ${g}, ${b}))`;
+      context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+
+
+      context.save()
+      context.translate(x, y);
+      context.translate(cell * 0.5, cell * 0.5);
+      // context.fillRect(0, 0, cell, cell);
+      context.beginPath()
+      context.arc(0, 0, cell * 0.5, 0, Math.PI * 2);
+      context.fill();
+      context.restore()
+    }
   };
 };
 
