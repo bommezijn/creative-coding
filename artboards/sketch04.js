@@ -9,9 +9,11 @@ function addTitle(text) {
 
 addTitle('Course 1 Unit 5')
 
+let manager;
 
 const settings = {
-  dimensions: [ 512, 512 ]
+  dimensions: [ 512, 512 ],
+  // animate: true,
 };
 
 let text = "NB";
@@ -31,7 +33,7 @@ const sketch = () => {
     
 
     const metrics = context.measureText(text);
-    console.log(metrics)
+    // console.log(metrics)
     const mx = metrics.actualBoundingBoxLeft * -1;
     const my = metrics.actualBoundingBoxAscent * -1;
     const mw = metrics.actualBoundingBoxLeft +  metrics.actualBoundingBoxRight;
@@ -54,4 +56,37 @@ const sketch = () => {
   };
 };
 
-canvasSketch(sketch, settings);
+// cant turn on animate as that would update on every frame, hence it would be better to use async
+const onKeyUp = async (e) => {
+  text = e.key;
+  manager.render();
+}
+
+document.addEventListener('keyup', onKeyUp)
+
+
+
+
+/*
+let url = 'https://picsum.photos/200'
+const loadAnImage = async (url) => {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = (err) => reject(err);
+    image.src = url;
+  })
+}
+
+const start = async () => {
+  const image = await loadAnImage(url);
+  console.log(`image width: ${image.width}`, image)
+}
+ */
+
+// Wrap canvasSketch in an async function so we can use await to load the key 
+const start = async () => {
+  manager = await canvasSketch(sketch, settings);
+}
+start();
+// canvasSketch(sketch, settings);
