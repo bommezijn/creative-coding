@@ -18,8 +18,9 @@ const settings = {
 };
 
 let text = "N";
-let fontSize = 360;
-let fontFamily = "arial";
+let fontSize = 36;
+// let fontFamily = "PP Neue World";
+let fontFamily = "PP Supply Mono";
 
 const typeCanvas = document.createElement('canvas');
 const typeContext = typeCanvas.getContext('2d');
@@ -39,7 +40,7 @@ const sketch = ({ context, width, height }) => {
     typeContext.fillStyle = 'black';
     typeContext.fillRect(0, 0, cols, rows);
 
-    fontSize = cols;
+    fontSize = cols  * 1.2 ;
     
     typeContext.fillStyle = 'white';
     typeContext.textBaseline = 'top';
@@ -77,7 +78,7 @@ const sketch = ({ context, width, height }) => {
     context.textBaseLine = 'middle';
     context.textAlign = 'center';
     
-    context.drawImage(typeCanvas, 0, 0);
+    // context.drawImage(typeCanvas, 0, 0);
 
 
     for (let index = 0; index < numCells; index++) {
@@ -94,6 +95,7 @@ const sketch = ({ context, width, height }) => {
       const glyph = getGlyph(r);
 
       context.font = `${cell * 2}px ${fontFamily}`;
+      if (Math.random() < 0.1) context.font = `${cell * 3}px ${fontFamily}`;
       // context.fillStyle = `rgb(${r}, ${g}, ${b}))`;
       // context.fillStyle = `rgba(${r}, ${g}, ${b}`;
       context.fillStyle = `white`;
@@ -118,7 +120,7 @@ const getGlyph = (v) => {
   if (v < 150) return '-';
   if (v < 200) return '+';
 
-  const glyphs = "_-=/ *".split('');
+  const glyphs = "_/ *".split('');
   // return text;
   return random.pick(glyphs)
 }
