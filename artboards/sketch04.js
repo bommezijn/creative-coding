@@ -1,4 +1,5 @@
 const canvasSketch = require('canvas-sketch');
+const random = require('canvas-sketch-util/random');
 function addTitle(text) {
   const el = document.createElement('h1')
   el.textContent = text;
@@ -68,7 +69,16 @@ const sketch = ({ context, width, height }) => {
     const typeData = typeContext.getImageData(0, 0, cols, rows).data;
     // const typeDataT = typeContext.getImageData(0, 0, cols, rows);
     // console.log(typeDataT)
+    
+    
+    context.fillStyle = 'black';
+    context.fillRect(0,0, width, height);
+
+    context.textBaseLine = 'middle';
+    context.textAlign = 'center';
+    
     context.drawImage(typeCanvas, 0, 0);
+
 
     for (let index = 0; index < numCells; index++) {
       const col = index % cols;
@@ -81,8 +91,12 @@ const sketch = ({ context, width, height }) => {
       const b = typeData[(index * 4) + 2];
       const a = typeData[(index * 4) + 3];
 
+      const glyph = getGlyph(r);
+
+      context.font = `${cell * 2}px ${fontFamily}`;
       // context.fillStyle = `rgb(${r}, ${g}, ${b}))`;
-      context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+      // context.fillStyle = `rgba(${r}, ${g}, ${b}`;
+      context.fillStyle = `white`;
 
 
       context.save()
@@ -90,12 +104,24 @@ const sketch = ({ context, width, height }) => {
       context.translate(cell * 0.5, cell * 0.5);
       // context.fillRect(0, 0, cell, cell);
       context.beginPath()
-      context.arc(0, 0, cell * 0.5, 0, Math.PI * 2);
+      // context.arc(0, 0, cell * 0.5, 0, Math.PI * 2);
+      context.fillText(glyph, 0,0);
       context.fill();
       context.restore()
     }
   };
 };
+
+const getGlyph = (v) => {
+  if (v < 50) return '';
+  if (v < 100) return '.';
+  if (v < 150) return '-';
+  if (v < 200) return '+';
+
+  const glyphs = "_-=/ *".split('');
+  // return text;
+  return random.pick(glyphs)
+}
 
 // cant turn on animate as that would update on every frame, hence it would be better to use async
 const onKeyUp = async (e) => {
