@@ -58,38 +58,10 @@ const sketch = ({ context, width, height }) => {
     context.textBaseLine = 'middle';
     context.textAlign = 'center';
 
-    // typeContext.font = `${fontSize}px ${fontFamily}`;
-    
-
-    // const metrics = typeContext.measureText(text);
-
-    // const mx = metrics.actualBoundingBoxLeft * -1;
-    // const my = metrics.actualBoundingBoxAscent * -1;
-    // const mw = metrics.actualBoundingBoxLeft +  metrics.actualBoundingBoxRight;
-    // const mh = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
-
-    // const tx = (cols - mw) * 0.5 - mx;
-    // const ty = (rows - mh) * 0.5 - my;
-
-    // typeContext.save();
-    // typeContext.translate(tx, ty);
-
-    // typeContext.beginPath()
-    
-    // // typeContext.strokeText(text, 0,0);
-    // typeContext.fillText(text, 0,0);
-    // typeContext.restore();
-    
-    // context.fillStyle = 'black';
-    // context.fillRect(0,0, width, height);
-    
-
     for (let index = 0; index < numCells; index++) {
       const col = index % cols;
       const row = Math.floor(index / cols);
 
-      // const x = col * cell;
-      // const y = row * cell;
       const x = col * cell + random.range(-cell, cell) * 0.5;
       const y = row * cell + random.range(-cell, cell) * 0.5;
 
@@ -102,29 +74,19 @@ const sketch = ({ context, width, height }) => {
 
       const glyph = getGlyph(g);
 
-
-
       context.font = `${cell * 2}px ${fontFamily}`;
       if (Math.random() < 0.1) context.font = `${cell * 3}px ${fontFamily}`;
-      // context.fillStyle = `rgb(${r}, ${g}, ${b}, ${a}))`;
-      // context.fillStyle = `white`;
-      context.fillStyle =  hexC;
 
+      context.fillStyle =  hexC;
 
       context.save()
       context.translate(x, y);
       context.translate(cell * 0.5, cell * 0.5);
-      // context.fillRect(0, 0, cell, cell);
-      // context.beginPath()
-      // context.arc(0, 0, cell * 0.5, 0, Math.PI * 2);
+
       context.fillText(glyph, 0,0);
-      // context.fill();
 
       context.restore()
     }
-
-    // context.drawImage(typeCanvas, 0, 0);
-
   };
 };
 
@@ -138,13 +100,12 @@ const getGlyph = (v) => {
   // return text;
   return random.pick(glyphs)
 }
-// 
+
 // cant turn on animate as that would update on every frame, hence it would be better to use async
 const onKeyUp = async (e) => {
   text = e.key;
   manager.render();
 }
-
 // document.addEventListener('keyup', onKeyUp)
 
 // Load an image
