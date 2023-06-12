@@ -1,6 +1,7 @@
 const canvasSketch = require('canvas-sketch');
 const random = require('canvas-sketch-util/random');
 const Color = require('canvas-sketch-util/color');
+const tweakPane = require('tweakpane');
 
 function addTitle(text) {
   const el = document.createElement('h1')
@@ -10,13 +11,18 @@ function addTitle(text) {
   document.body.style.flexDirection = 'column';
 }
 
-addTitle('Course 1 Unit 5')
+addTitle('Course 1 Unit 6')
+
+const params = {
+  url: 'https://www.giantbomb.com/a/uploads/scale_medium/0/6087/2437349-pikachu.png',
+  glyphs: '_/ *',
+  cellCount: 4,
+}
 
 let manager, image;
 
 const settings = {
   dimensions: [ 512, 512 ],
-  animate: true,
 };
 
 let text = "N";
@@ -29,17 +35,16 @@ const typeContext = typeCanvas.getContext('2d');
 
 
 const sketch = ({ context, width, height }) => {
-
-  const cell = 4;
+  const cell = params.cellCount;
   const cols = Math.floor(width / cell);
   const rows = Math.floor(height / cell);
   const numCells = cols * rows;
-
+  
   typeCanvas.width = cols;
   typeCanvas.height = rows;
 
   return ({ context, width, height }) => {
-    typeContext.fillStyle = 'black';
+    // typeContext.fillStyle = 'green';
     typeContext.fillRect(0, 0, cols, rows);
 
     // fontSize = cols  * 1.2 ;
@@ -51,7 +56,7 @@ const sketch = ({ context, width, height }) => {
     // const typeDataT = typeContext.getImageData(0, 0, cols, rows);
     // console.log(typeDataT)
     
-    typeContext.fillStyle = 'black';
+    // typeContext.fillStyle = 'white';
     context.fillRect(0,0, width, height);
 
     // typeContext.textBaseline = 'top';
@@ -72,7 +77,7 @@ const sketch = ({ context, width, height }) => {
 
       const hexC = Color.parse([ r, g, b, a ]).hex;
 
-      const glyph = getGlyph(g);
+      const glyph = getGlyph(r, g, b, a);
 
       context.font = `${cell * 2}px ${fontFamily}`;
       if (Math.random() < 0.1) context.font = `${cell * 3}px ${fontFamily}`;
@@ -96,7 +101,7 @@ const getGlyph = (v) => {
   if (v < 150) return '-';
   if (v < 200) return '+';
 
-  const glyphs = "_/ *".split('');
+  const glyphs = params.glyphs.split('');
   // return text;
   return random.pick(glyphs)
 }
@@ -109,7 +114,8 @@ const onKeyUp = async (e) => {
 // document.addEventListener('keyup', onKeyUp)
 
 // Load an image
-let url = 'https://pbs.twimg.com/media/Fnzb8zmagAc7nAu?format=jpg&name=medium'
+// let url = 'https://pbs.twimg.com/media/Fnzb8zmagAc7nAu?format=jpg&name=medium'
+let url = params.url
 const loadAnImage = async (url) => {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -120,11 +126,33 @@ const loadAnImage = async (url) => {
   })
 }
 
+const CreatePane = () => {
+  const pane =  new tweakPane.Pane();
+  let folder = pane.addFolder({
+    title: 'Image settings',
+    expanded: true
+  })
+  folder.addInput(params, 'cellCount', { min: 1, max: 20, step: 1 })
+    .on('change', (e) => {
+      params.cellCount = e.value;
+      manager.loadAndRun(sketch, settings); 
+    });
+  folder.addInput(params, 'url').on('change', async (e) => {
+    url = e.value;
+    image = await loadAnImage(url);
+    manager.render();
+  });
+  folder.addInput(params, 'glyphs').on('change', async (e) => {
+    e.value == '' ? params.glyphs = '_/@%&*@ nb' : params.glyphs = e.value;
+    manager.render();
+  })
+}
+
 // Wrap canvasSketch in an async function so we can use await to load the key 
 const start = async () => {
   // image.crossOrigin = 'anonymous';
+  CreatePane()
   image = await loadAnImage(url);
   manager = await canvasSketch(sketch, settings);
 }
 start();
-// canvasSketch(sketch, settings);
